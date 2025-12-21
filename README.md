@@ -134,36 +134,23 @@ This setup was required due to the size of the LLaMA model and the video analysi
 ```bash
   uvicorn app.api:app --host 0.0.0.0 --port 8007
 ```
-📌 API Endpoints
-POST /evaluate
+## 📌 API Endpoints
+  **POST /evaluate**
+    Evaluates a candidate using CV, Job Description, and optional video.
 
-Evaluates a candidate using CV, Job Description, and optional video.
+ **GET /results**
+   Retrieves evaluation results using a session ID.
 
-GET /results
+## **🎯 Use Cases**
 
-Retrieves evaluation results using a session ID.
+- **AI-assisted recruitment systems**
 
-🎯 Use Cases
+- **Automated candidate screening**
 
-AI-assisted recruitment systems
+- **HR decision support tools**
 
-Automated candidate screening
+- **Research in multi-modal AI evaluation**
 
-HR decision support tools
 
-Research in multi-modal AI evaluation
-
-📈 Future Improvements
-
-Asynchronous background processing
-
-Database integration for persistence
-
-Authentication & role-based access
-
-Model optimization and quantization
-
-Frontend dashboard
-
-📄 License
+## 📄 License
 This project is for educational and research purposes.
