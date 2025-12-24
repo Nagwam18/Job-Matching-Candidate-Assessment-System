@@ -52,10 +52,10 @@ LLM CV Analysis
 Skill Matching & Scoring
 │
 ▼
-Emotion Analysis
+Video Emotion Analysis
 │
 ▼                                        
-Final Verdict Video  
+Final Verdict 
 
 ```
 ---
@@ -158,7 +158,9 @@ Simple link:
 ## Dashboard Screenshots
 
  ![Dashboard Screenshot](assests/image1.png)
+ 
  ![Dashboard Screenshot](assests/image2.png)
+ 
  ![Dashboard Screenshot](assests/image3.png)
 
 
