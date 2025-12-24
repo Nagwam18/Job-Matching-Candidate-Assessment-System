@@ -51,12 +51,11 @@ LLM CV Analysis
 ▼
 Skill Matching & Scoring
 │
-├───────────────┐
-▼ ▼
-Final Verdict Video File
-Generation (LLM) │
-│ ▼
-▼ Emotion Analysis
+▼
+Emotion Analysis
+│
+▼                                        
+Final Verdict Video  
 
 ```
 ---
@@ -78,7 +77,7 @@ job-matching-system/
 │ ├── utils/
 │ │ └── file_loader.py
 │ 
-├── notebooks/
+├── NoteBook/
 │ └── job-matching-and-candidate-assessment-system.ipynb
 │
 ├── requirements.txt
