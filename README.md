@@ -154,7 +154,7 @@ This setup was required due to the size of the LLaMA model and the video analysi
  ## Demo
 
 Simple link:
-[Watch the demo (Google Drive)]() 
+[Watch the demo (Google Drive)](https://drive.google.com/file/d/1TR_aMKeYHLdfkhCoNgLVXSG15J6Ocxox/view?usp=sharing) 
 
 ## Dashboard Screenshots
 
