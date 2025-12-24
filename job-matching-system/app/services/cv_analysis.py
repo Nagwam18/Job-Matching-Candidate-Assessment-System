@@ -2,6 +2,9 @@ import re
 from app.services.llm_model import tokenizer, model
 
 
+import re
+import torch
+
 def analyze_cv(cv_text, jd_text):
     prompt = f"""
 You are an expert recruiter.
@@ -15,25 +18,30 @@ Job Description:
 Instructions:
 1. Identify all skills required in the Job Description.
 2. Identify all skills mentioned in the CV.
-3. Extract the **matched skills** (skills present in both CV and JD, considering understanding, synonyms, and related concepts).
-4. Extract the **non-matched skills** (skills required in JD but not present in CV).
-5. Calculate **CV Score** = (number of matched skills / total skills in JD) * 100, rounded to 1 decimal.
+3. Extract the matched skills (skills present in both CV and JD, considering synonyms and related concepts).
+4. Extract the non-matched skills (skills required in JD but not present in CV).
+5. Calculate CV Score = (number of matched skills / total skills in JD) * 100, rounded to 1 decimal.
 
-Return ONLY in this format:
+Return ONLY in this exact format:
 
 Matched Skills
-- skill1
-- skill2
-...
+- skill
 
 Non-Matched Skills
-- skill1
-- skill2
+- skill
 
 CV Score
 XX.X% match
+
+Rules:
+- Do not repeat any skills.
+- Do not use placeholders.
+- Do not explain anything.
+- Output must end after CV Score.
 """
+
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
     outputs = model.generate(
         **inputs,
         max_new_tokens=1024,
@@ -42,46 +50,48 @@ XX.X% match
         pad_token_id=tokenizer.eos_token_id
     )
 
-    full_output = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    output_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-    if "Matched Skills" in full_output:
-        result = full_output[full_output.index("Matched Skills"):].strip()
-    else:
-        result = full_output.strip()
+    if "Matched Skills" in output_text:
+        output_text = output_text.split("Matched Skills", 1)[1]
+        output_text = "Matched Skills\n" + output_text
 
-    return result
-
-
-def extract_cv_score(result_text):
-    match = re.search(r"CV Score\s*([\d]+(?:\.\d+)?)%\s*match", result_text, re.IGNORECASE)
-    if match:
-        return float(match.group(1))
-    return None
+    return output_text.strip()
 
 
-def extract_skills(result_text):
-    matched = []
-    missing = []
+def extract_skills(cv_output: str):
+    matched, missing = [], []
 
-    lines = result_text.splitlines()
-    mode = None
+    matched_section = re.search(
+        r"Matched Skills\s*:?(.*?)(Non-Matched Skills)",
+        cv_output,
+        re.S | re.I
+    )
 
-    for line in lines:
-        line = line.strip()
+    if matched_section:
+        for line in matched_section.group(1).splitlines():
+            skill = line.strip("- ").strip()
+            if skill:
+                matched.append(skill)
 
-        if line.lower() == "matched skills":
-            mode = "matched"
-            continue
-        elif line.lower() == "missing skills":
-            mode = "missing"
-            continue
-        elif line.lower().startswith("cv score"):
-            mode = None
-            continue
+    missing_section = re.search(
+        r"Non-Matched Skills\s*:?(.*?)(CV Score)",
+        cv_output,
+        re.S | re.I
+    )
 
-        if mode == "matched" and line.startswith("-"):
-            matched.append(line[1:].strip())
-        elif mode == "missing" and line.startswith("-"):
-            missing.append(line[1:].strip())
+    if missing_section:
+        for line in missing_section.group(1).splitlines():
+            skill = line.strip("- ").strip()
+            if skill:
+                missing.append(skill)
 
     return matched, missing
+
+def extract_cv_score(cv_output: str):
+    score_match = re.search(
+        r"CV Score\s*([\d\.]+)\s*%",
+        cv_output,
+        re.I
+    )
+    return float(score_match.group(1)) if score_match else None
