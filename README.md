@@ -151,6 +151,17 @@ This setup was required due to the size of the LLaMA model and the video analysi
 
 - **Research in multi-modal AI evaluation**
 
+ ## Demo
+
+Simple link:
+[Watch the demo (Google Drive)]() 
+
+## Dashboard Screenshots
+
+ ![Dashboard Screenshot](assests/image1.png)
+ ![Dashboard Screenshot](assests/image2.png)
+ ![Dashboard Screenshot](assests/image3.png)
+
 
 ## 📄 License
 This project is for educational and research purposes.
